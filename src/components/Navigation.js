@@ -1,33 +1,23 @@
 // src/components/Navigation.js
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+import React from "react";
+import { NavLink } from "react-router-dom";
+import "./Navigation.css";
 
 const Navigation = () => {
   return (
     <nav className="navbar">
-      <h1>StreamList</h1>
-      <ul>
-        <li>
-          <NavLink to="/" end className={({ isActive }) => (isActive ? "active" : "")}>
-            StreamList
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/movies" className={({ isActive }) => (isActive ? "active" : "")}>
-            Movies
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/cart" className={({ isActive }) => (isActive ? "active" : "")}>
-            Cart
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/about" className={({ isActive }) => (isActive ? "active" : "")}>
-            About
-          </NavLink>
-        </li>
-      </ul>
+      <NavLink to="/" exact activeClassName="active">
+        <i className="fas fa-stream"></i> StreamList
+      </NavLink>
+      <NavLink to="/movies" activeClassName="active">
+        <i className="fas fa-film"></i> Movies
+      </NavLink>
+      <NavLink to="/cart" activeClassName="active">
+        <i className="fas fa-shopping-cart"></i> Cart
+      </NavLink>
+      <NavLink to="/about" activeClassName="active">
+        <i className="fas fa-info-circle"></i> About
+      </NavLink>
     </nav>
   );
 };
