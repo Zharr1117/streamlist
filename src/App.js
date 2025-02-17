@@ -7,6 +7,7 @@ import Movies from './components/Movies';
 import Cart from './components/Cart';
 import About from './components/About';
 import './App.css';
+import MovieSearch from './components/MovieSearch';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/movies" element={<Movies />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/about" element={<About />} />
+            <Route path="/search" element={<MovieSearch />} />
           </Routes>
         </div>
       </div>

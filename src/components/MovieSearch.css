@@ -1,0 +1,97 @@
+/* src/components/MovieSearch.css */
+
+/* Page Layout */
+.movie-search {
+    text-align: center;
+    padding: 20px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Search Form */
+  .movie-search form {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .movie-search input {
+    padding: 10px;
+    width: 300px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .movie-search button {
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+  }
+  
+  .movie-search button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Movie List */
+  .movie-results {
+    width: 80%;
+    max-width: 800px;
+  }
+  
+  .movie-results ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+  
+  .movie-results li {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 250px;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .movie-results li:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Movie Titles */
+  .movie-results h3 {
+    font-size: 18px;
+    margin: 10px 0;
+  }
+  
+  /* Movie Poster */
+  .movie-results img {
+    max-width: 100%;
+    border-radius: 8px;
+    height: auto;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 600px) {
+    .movie-search input {
+      width: 80%;
+    }
+  
+    .movie-results li {
+      width: 100%;
+    }
+  }
+  
