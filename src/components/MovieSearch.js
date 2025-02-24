@@ -1,5 +1,5 @@
 // src/components/MovieSearch.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { fetchMovies } from "../api/tmdb";
 import "./MovieSearch.css";
 
@@ -8,9 +8,19 @@ const MovieSearch = () => {
   const [movies, setMovies] = useState(() => {
     return JSON.parse(localStorage.getItem("movieSearchResults")) || [];
   });
-
   const [debouncedQuery, setDebouncedQuery] = useState("");
 
+  // ✅ Wrap handleSearch in useCallback to prevent warnings
+  const handleSearch = useCallback(async () => {
+    if (!debouncedQuery) return;
+    
+    const results = await fetchMovies(debouncedQuery);
+    console.log("Fetched movies:", results); // ✅ Debugging step: Check if results include images
+    setMovies(results);
+    localStorage.setItem("movieSearchResults", JSON.stringify(results));
+  }, [debouncedQuery]);
+
+  // ✅ Debounce the query to reduce API calls
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedQuery(query);
@@ -18,17 +28,10 @@ const MovieSearch = () => {
     return () => clearTimeout(timer);
   }, [query]);
 
+  // ✅ Ensure handleSearch is in dependency array
   useEffect(() => {
-    if (debouncedQuery) {
-      handleSearch();
-    }
-  }, [debouncedQuery]);
-
-  const handleSearch = async () => {
-    const results = await fetchMovies(debouncedQuery);
-    setMovies(results);
-    localStorage.setItem("movieSearchResults", JSON.stringify(results));
-  };
+    handleSearch();
+  }, [handleSearch]);
 
   return (
     <div className="movie-search">
@@ -50,7 +53,7 @@ const MovieSearch = () => {
                 <p>📅 Release Date: {movie.release_date || "Unknown"}</p>
                 <p>⏳ Movie Length: {movie.runtime ? `${movie.runtime} min` : "N/A"}</p>
 
-                {/* ✅ Display movie poster or fallback image */}
+                {/* ✅ Fix: Only show image if poster_path is available */}
                 {movie.poster_path ? (
                   <img
                     src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
