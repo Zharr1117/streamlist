@@ -22,8 +22,9 @@ const StreamList = () => {
 
   // ✅ Save movies to localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem("movies", JSON.stringify(movies));
-  }, [movies]);
+    console.log("Current Movies List:", movies);  // ✅ Logs movie list every time it updates
+    localStorage.setItem("movies", JSON.stringify(movies)); 
+  }, [movies]);  
 
   // ✅ Handle adding or updating a movie
   const handleSubmit = (e) => {
