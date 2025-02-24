@@ -1,15 +1,22 @@
+// src/components/MovieSearch.js
 import React, { useState } from 'react';
 import { fetchMovies } from '../api/tmdb';
-import "./MovieSearch.css"; 
+import "./MovieSearch.css";
 
 const MovieSearch = () => {
     const [query, setQuery] = useState('');
-    const [movies, setMovies] = useState([]);
+    const [movies, setMovies] = useState(() => {
+        return JSON.parse(localStorage.getItem('movieSearchResults')) || [];
+    });
 
+    // ✅ Only search when the user presses "Enter"
     const handleSearch = async (e) => {
         e.preventDefault();
-        const results = await fetchMovies(query);
-        setMovies(results);
+        if (query.trim() !== "") {
+            const results = await fetchMovies(query);
+            setMovies(results);
+            localStorage.setItem('movieSearchResults', JSON.stringify(results));
+        }
     };
 
     return (
@@ -22,7 +29,7 @@ const MovieSearch = () => {
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                 />
-                <button type="submit">Search</button>
+                <button type="submit">🔎 Search</button>
             </form>
 
             <div className="movie-results">
@@ -32,7 +39,14 @@ const MovieSearch = () => {
                             <li key={movie.id}>
                                 <h3>{movie.title}</h3>
                                 <p>{movie.release_date}</p>
-                                <img src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`} alt={movie.title} />
+                                {movie.poster_path ? ( 
+                                    <img 
+                                        src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`} 
+                                        alt={movie.title} 
+                                    />
+                                ) : (
+                                    <p>No Image Available</p> 
+                                )}
                             </li>
                         ))}
                     </ul>

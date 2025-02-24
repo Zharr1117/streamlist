@@ -1,25 +1,28 @@
 // src/components/StreamList.js
 import React, { useState, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";  // ✅ Import UUID for unique movie IDs
-import { fetchMovies } from "../api/tmdb"; // ✅ Import TMDB API function
-import "./StreamList.css"; // ✅ Import CSS for styling
+import { v4 as uuidv4 } from "uuid";
+import { fetchMovies } from "../api/tmdb";
+import "./StreamList.css";
 
 const StreamList = () => {
-  // ✅ Load movies from local storage or initialize as an empty array
+  // ✅ Load movies from localStorage or initialize an empty array
   const [movies, setMovies] = useState(() => {
     return JSON.parse(localStorage.getItem("movies")) || [];
   });
 
-  const [input, setInput] = useState(""); // ✅ Input field state
-  const [editingId, setEditingId] = useState(null); // ✅ Track which item is being edited
-  const [completedMovies, setCompletedMovies] = useState(new Set()); // ✅ Store completed movies
+  // ✅ Individual state variables
+  const [input, setInput] = useState("");
+  const [editingId, setEditingId] = useState(null);
+  const [completedMovies, setCompletedMovies] = useState(new Set());
+  const [message, setMessage] = useState(""); // ✅ Success message state
 
-  // ✅ State for TMDB search functionality
-  const [searchQuery, setSearchQuery] = useState(""); // Input for movie search
-  const [searchResults, setSearchResults] = useState([]); // Store search results
+  // ✅ Movie search state
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
 
+  // ✅ Save movies to localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem("movies", JSON.stringify(movies)); // ✅ Update local storage
+    localStorage.setItem("movies", JSON.stringify(movies));
   }, [movies]);
 
   // ✅ Handle adding or updating a movie
@@ -31,14 +34,17 @@ const StreamList = () => {
           movie.id === editingId ? { ...movie, title: input } : movie
         ));
         setEditingId(null);
+        setMessage("✅ Movie Updated!");
       } else {
-        setMovies([...movies, { id: uuidv4(), title: input }]); // ✅ Assign unique UUID
+        setMovies([...movies, { id: uuidv4(), title: input }]);
+        setMessage("✅ Movie Added!");
       }
-      setInput(""); // ✅ Clear input field after submit
+      setTimeout(() => setMessage(""), 2000);
+      setInput("");
     }
   };
 
-  // ✅ Handle deleting a movie by ID
+  // ✅ Handle deleting a movie
   const handleDelete = (id) => {
     setMovies(movies.filter((movie) => movie.id !== id));
   };
@@ -59,7 +65,7 @@ const StreamList = () => {
     setEditingId(id);
   };
 
-  // 🔍 Fetch movies from TMDB based on user search
+  // ✅ Handle TMDB movie search
   const handleSearch = async () => {
     if (searchQuery.trim() !== "") {
       const results = await fetchMovies(searchQuery);
@@ -67,17 +73,22 @@ const StreamList = () => {
     }
   };
 
-  // ✅ Add a searched movie to the watchlist
+  // ✅ Add searched movie to list
   const addSearchedMovie = (movieTitle) => {
     if (!movies.some((movie) => movie.title === movieTitle)) {
-      setMovies([...movies, { id: uuidv4(), title: movieTitle }]); // ✅ Assign unique UUID
+      setMovies([...movies, { id: uuidv4(), title: movieTitle }]);
+      setMessage(`✅ "${movieTitle}" added!`);
+      setTimeout(() => setMessage(""), 2000);
     }
   };
 
   return (
     <div className="streamlist-container">
       <h2>My Streaming List</h2>
-      
+
+      {/* ✅ Success message */}
+      {message && <p className="message">{message}</p>}
+
       {/* ✅ Movie Entry Form */}
       <form onSubmit={handleSubmit} className="streamlist-form">
         <input
@@ -89,7 +100,7 @@ const StreamList = () => {
         <button type="submit">{editingId !== null ? "Update" : "Add"}</button>
       </form>
 
-      {/* 🔍 TMDB Movie Search Section */}
+      {/* ✅ Search Movies via TMDB API */}
       <h3>Search for a Movie</h3>
       <input
         type="text"
@@ -106,7 +117,7 @@ const StreamList = () => {
           <ul>
             {searchResults.map((movie) => (
               <li key={movie.id}>
-                {movie.title} 
+                {movie.title}
                 <button onClick={() => addSearchedMovie(movie.title)}>➕ Add</button>
               </li>
             ))}
@@ -114,7 +125,7 @@ const StreamList = () => {
         </div>
       )}
 
-      {/* ✅ User-added movie list */}
+      {/* ✅ Display user-added movie list */}
       <h3>Movies Added:</h3>
       <ul className="movie-list">
         {movies.length > 0 ? (
