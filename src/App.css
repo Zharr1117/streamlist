@@ -1,16 +1,20 @@
 /* src/App.css */
 
-/* Import FontAwesome from CDN */
-@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css");
-
-/* Apply Google Font */
+/* Global Resets and Improvements */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
+@import "~@fortawesome/fontawesome-free/css/all.min.css";
+
+* {
+  box-sizing: border-box;
+}
 
 body {
   font-family: "Poppins", sans-serif;
   margin: 0;
   padding: 0;
   background-color: #f4f4f4;
+  color: #333;
+  line-height: 1.6;
 }
 
 /* Centered app layout */
@@ -18,6 +22,7 @@ body {
   text-align: center;
   max-width: 800px;
   margin: auto;
+  padding: 20px;
 }
 
 /* Navigation Bar */
@@ -28,7 +33,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap; /* Allows responsive wrapping */
+  flex-wrap: wrap;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -43,7 +48,7 @@ body {
   gap: 1.5rem;
   margin: 0;
   padding: 0;
-  flex-wrap: wrap; /* Improves mobile responsiveness */
+  flex-wrap: wrap;
 }
 
 .navbar li {
@@ -68,33 +73,32 @@ body {
   padding: 2rem;
 }
 
-/* Input and Buttons */
+/* Global Button Styles */
+button {
+  font-family: inherit;
+  padding: 0.8rem 1.5rem;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+button:hover {
+  transform: translateY(-2px);
+}
+
+/* Input Fields */
 input[type="text"] {
   font-family: inherit;
   padding: 0.6rem;
-  width: 100%; /* Full width on smaller screens */
+  width: 100%;
   max-width: 400px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 1rem;
   margin-bottom: 10px;
-}
-
-button {
-  font-family: inherit;
-  padding: 0.8rem 1.5rem; /* Increased padding for better touch usability */
-  margin-left: 1rem;
-  border: none;
-  background-color: #28a745;
-  color: white;
-  font-size: 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s ease-in-out;
-}
-
-button:hover {
-  background-color: #218838;
 }
 
 /* Movie List */
@@ -112,16 +116,15 @@ button:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap; /* Ensures items wrap properly */
+  flex-wrap: wrap;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Styling for Delete Button */
 .movie-list button {
   background-color: #dc3545;
+  color: #fff;
   padding: 6px 12px;
   font-size: 0.9rem;
-  border-radius: 4px;
 }
 
 .movie-list button:hover {
@@ -153,6 +156,39 @@ button:hover {
   border-radius: 8px;
   width: 100%;
   max-width: 200px;
+  display: block;
+  margin: 10px auto;
+}
+
+/* Login Container */
+.login-container {
+  max-width: 400px;
+  margin: auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.login-container input {
+  width: 100%;
+  padding: 10px;
+  margin: 0.5rem 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.login-container button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+}
+
+.login-container .error {
+  color: red;
+  margin-top: 1rem;
+  font-weight: bold;
 }
 
 /* Responsive Design */
@@ -180,4 +216,20 @@ button:hover {
     width: 100%;
     margin: 5px 0;
   }
+}
+/* Logout Button */
+.logout-btn {
+  background-color: #dc3545;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 1rem;
+  transition: background 0.3s ease-in-out;
+}
+
+.logout-btn:hover {
+  background-color: #c82333;
 }

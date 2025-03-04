@@ -6,8 +6,11 @@ import StreamList from './components/StreamList';
 import Movies from './components/Movies';
 import Cart from './components/Cart';
 import About from './components/About';
-import './App.css';
 import MovieSearch from './components/MovieSearch';
+import Login from './components/Login';
+import Register from './components/Register';
+import PrivateRoute from './components/PrivateRoute';
+import './App.css';
 
 function App() {
   return (
@@ -16,11 +19,51 @@ function App() {
         <Navigation />
         <div className="content">
           <Routes>
-            <Route path="/" element={<StreamList />} />
-            <Route path="/movies" element={<Movies />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/search" element={<MovieSearch />} />
+            {/* Public Routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+
+            {/* Protected Routes */}
+            <Route
+              path="/"
+              element={
+                <PrivateRoute>
+                  <StreamList />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/movies"
+              element={
+                <PrivateRoute>
+                  <Movies />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/cart"
+              element={
+                <PrivateRoute>
+                  <Cart />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/about"
+              element={
+                <PrivateRoute>
+                  <About />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/search"
+              element={
+                <PrivateRoute>
+                  <MovieSearch />
+                </PrivateRoute>
+              }
+            />
           </Routes>
         </div>
       </div>
