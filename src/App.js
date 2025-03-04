@@ -9,6 +9,7 @@ import About from './components/About';
 import MovieSearch from './components/MovieSearch';
 import Login from './components/Login';
 import Register from './components/Register';
+import CreditCard from './components/CreditCard'; // ✅ Import CreditCard component
 import PrivateRoute from './components/PrivateRoute';
 import './App.css';
 
@@ -61,6 +62,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <MovieSearch />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/checkout"
+              element={
+                <PrivateRoute>
+                  <CreditCard />
                 </PrivateRoute>
               }
             />
