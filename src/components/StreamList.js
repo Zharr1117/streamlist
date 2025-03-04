@@ -5,28 +5,21 @@ import { fetchMovies } from "../api/tmdb";
 import "./StreamList.css";
 
 const StreamList = () => {
-  // ✅ Load movies from localStorage or initialize an empty array
   const [movies, setMovies] = useState(() => {
     return JSON.parse(localStorage.getItem("movies")) || [];
   });
 
-  // ✅ Individual state variables
   const [input, setInput] = useState("");
   const [editingId, setEditingId] = useState(null);
   const [completedMovies, setCompletedMovies] = useState(new Set());
-  const [message, setMessage] = useState(""); // ✅ Success message state
-
-  // ✅ Movie search state
+  const [message, setMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
-  // ✅ Save movies to localStorage whenever they change
   useEffect(() => {
-    console.log("Current Movies List:", movies);  // ✅ Logs movie list every time it updates
-    localStorage.setItem("movies", JSON.stringify(movies)); 
-  }, [movies]);  
+    localStorage.setItem("movies", JSON.stringify(movies));
+  }, [movies]);
 
-  // ✅ Handle adding or updating a movie
   const handleSubmit = (e) => {
     e.preventDefault();
     if (input.trim()) {
@@ -37,7 +30,14 @@ const StreamList = () => {
         setEditingId(null);
         setMessage("✅ Movie Updated!");
       } else {
-        setMovies([...movies, { id: uuidv4(), title: input }]);
+        const newMovie = {
+          id: uuidv4(),
+          title: input,
+          overview: "Manually added movie.",
+          poster_path: null,
+          addedFromSearch: false,
+        };
+        setMovies([...movies, newMovie]);
         setMessage("✅ Movie Added!");
       }
       setTimeout(() => setMessage(""), 2000);
@@ -45,12 +45,10 @@ const StreamList = () => {
     }
   };
 
-  // ✅ Handle deleting a movie
   const handleDelete = (id) => {
     setMovies(movies.filter((movie) => movie.id !== id));
   };
 
-  // ✅ Handle marking a movie as completed
   const handleComplete = (id) => {
     setCompletedMovies((prevCompleted) => {
       const newCompleted = new Set(prevCompleted);
@@ -59,14 +57,16 @@ const StreamList = () => {
     });
   };
 
-  // ✅ Handle editing a movie
   const handleEdit = (id) => {
     const movieToEdit = movies.find((movie) => movie.id === id);
+    if (movieToEdit.addedFromSearch) {
+      alert("Editing is disabled for TMDB movies.");
+      return;
+    }
     setInput(movieToEdit.title);
     setEditingId(id);
   };
 
-  // ✅ Handle TMDB movie search
   const handleSearch = async () => {
     if (searchQuery.trim() !== "") {
       const results = await fetchMovies(searchQuery);
@@ -74,11 +74,17 @@ const StreamList = () => {
     }
   };
 
-  // ✅ Add searched movie to list
-  const addSearchedMovie = (movieTitle) => {
-    if (!movies.some((movie) => movie.title === movieTitle)) {
-      setMovies([...movies, { id: uuidv4(), title: movieTitle }]);
-      setMessage(`✅ "${movieTitle}" added!`);
+  const addSearchedMovie = (movie) => {
+    if (!movies.some((m) => m.id === movie.id)) {
+      const newMovie = {
+        id: movie.id,
+        title: movie.title,
+        overview: movie.overview || "No overview available.",
+        poster_path: movie.poster_path,
+        addedFromSearch: true,
+      };
+      setMovies([...movies, newMovie]);
+      setMessage(`✅ "${movie.title}" added!`);
       setTimeout(() => setMessage(""), 2000);
     }
   };
@@ -87,10 +93,9 @@ const StreamList = () => {
     <div className="streamlist-container">
       <h2>My Streaming List</h2>
 
-      {/* ✅ Success message */}
       {message && <p className="message">{message}</p>}
 
-      {/* ✅ Movie Entry Form */}
+      {/* Manual Movie Entry */}
       <form onSubmit={handleSubmit} className="streamlist-form">
         <input
           type="text"
@@ -101,7 +106,7 @@ const StreamList = () => {
         <button type="submit">{editingId !== null ? "Update" : "Add"}</button>
       </form>
 
-      {/* ✅ Search Movies via TMDB API */}
+      {/* TMDB Movie Search */}
       <h3>Search for a Movie</h3>
       <input
         type="text"
@@ -111,7 +116,6 @@ const StreamList = () => {
       />
       <button onClick={handleSearch}>🔎 Search</button>
 
-      {/* ✅ Display search results */}
       {searchResults.length > 0 && (
         <div className="search-results">
           <h4>Search Results:</h4>
@@ -119,20 +123,28 @@ const StreamList = () => {
             {searchResults.map((movie) => (
               <li key={movie.id}>
                 {movie.title}
-                <button onClick={() => addSearchedMovie(movie.title)}>➕ Add</button>
+                <button onClick={() => addSearchedMovie(movie)}>➕ Add</button>
               </li>
             ))}
           </ul>
         </div>
       )}
 
-      {/* ✅ Display user-added movie list */}
+      {/* Movie List */}
       <h3>Movies Added:</h3>
       <ul className="movie-list">
         {movies.length > 0 ? (
           movies.map((movie) => (
             <li key={movie.id} className={completedMovies.has(movie.id) ? "completed" : ""}>
-              {movie.title}
+              <h4>{movie.title}</h4>
+              {movie.poster_path && (
+                <img
+                  src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
+                  alt={movie.title}
+                  style={{ width: "100px", borderRadius: "8px" }}
+                />
+              )}
+              <p>{movie.overview}</p>
               <button onClick={() => handleEdit(movie.id)}>✏️ Edit</button>
               <button onClick={() => handleComplete(movie.id)}>
                 {completedMovies.has(movie.id) ? "✅ Undo" : "✔ Mark as Watched"}

@@ -10,17 +10,14 @@ const MovieSearch = () => {
   });
   const [debouncedQuery, setDebouncedQuery] = useState("");
 
-  // ✅ Wrap handleSearch in useCallback to prevent warnings
   const handleSearch = useCallback(async () => {
     if (!debouncedQuery) return;
-    
+
     const results = await fetchMovies(debouncedQuery);
-    console.log("Fetched movies:", results); // ✅ Debugging step: Check if results include images
     setMovies(results);
     localStorage.setItem("movieSearchResults", JSON.stringify(results));
   }, [debouncedQuery]);
 
-  // ✅ Debounce the query to reduce API calls
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedQuery(query);
@@ -28,10 +25,27 @@ const MovieSearch = () => {
     return () => clearTimeout(timer);
   }, [query]);
 
-  // ✅ Ensure handleSearch is in dependency array
   useEffect(() => {
     handleSearch();
   }, [handleSearch]);
+
+  const handleAddToStreamList = (movie) => {
+    const existingMovies = JSON.parse(localStorage.getItem("movies")) || [];
+    if (!existingMovies.some((m) => m.id === movie.id)) {
+      const newMovie = {
+        id: movie.id,
+        title: movie.title,
+        overview: movie.overview || "No overview available.",
+        poster_path: movie.poster_path,
+        addedFromSearch: true,
+      };
+      const updatedMovies = [...existingMovies, newMovie];
+      localStorage.setItem("movies", JSON.stringify(updatedMovies));
+      alert(`✅ "${movie.title}" added to StreamList!`);
+    } else {
+      alert("⚠️ Movie is already in your StreamList.");
+    }
+  };
 
   return (
     <div className="movie-search">
@@ -53,7 +67,6 @@ const MovieSearch = () => {
                 <p>📅 Release Date: {movie.release_date || "Unknown"}</p>
                 <p>⏳ Movie Length: {movie.runtime ? `${movie.runtime} min` : "N/A"}</p>
 
-                {/* ✅ Fix: Only show image if poster_path is available */}
                 {movie.poster_path ? (
                   <img
                     src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
@@ -68,7 +81,7 @@ const MovieSearch = () => {
                   />
                 )}
 
-                <button>➕ Add</button>
+                <button onClick={() => handleAddToStreamList(movie)}>➕ Add</button>
               </li>
             ))}
           </ul>
