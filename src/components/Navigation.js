@@ -12,6 +12,7 @@ import {
   faSearch,
   faSignOutAlt,
   faUserPlus,
+  faTags, // ✅ Added for Subscriptions icon
 } from "@fortawesome/free-solid-svg-icons";
 
 const Navigation = () => {
@@ -36,6 +37,9 @@ const Navigation = () => {
       </NavLink>
       <NavLink to="/movies" className={({ isActive }) => (isActive ? "active" : "")}>
         <FontAwesomeIcon icon={faFilm} /> Movies
+      </NavLink>
+      <NavLink to="/subscriptions" className={({ isActive }) => (isActive ? "active" : "")}>
+        <FontAwesomeIcon icon={faTags} /> Subscriptions
       </NavLink>
       <NavLink to="/cart" className={({ isActive }) => (isActive ? "active" : "")}>
         <FontAwesomeIcon icon={faShoppingCart} /> Cart
